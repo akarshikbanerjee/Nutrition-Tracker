@@ -1,3 +1,9 @@
+import os
+os.environ["TZ"] = "America/New_York"
+import time
+time.tzset()
+
+
 import streamlit as st
 import pandas as pd
 import os
