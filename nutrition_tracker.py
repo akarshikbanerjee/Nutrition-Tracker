@@ -297,20 +297,20 @@ if page == "Nutrition":
     st.markdown("### 📊 History")
 
     if df.empty:
-    st.info("No data yet. Once you log a few days, your trends will appear here.")
+        st.info("No data yet. Once you log a few days, your trends will appear here.")
     else:
-    # ---- Daily aggregates ----
-    daily = df.groupby("date", as_index=False)[["calories", "protein"]].sum()
-    st.write("Daily totals:")
-    st.dataframe(daily.sort_values("date", ascending=False))
+        # ---- Daily aggregates ----
+        daily = df.groupby("date", as_index=False)[["calories", "protein"]].sum()
+        st.write("Daily totals:")
+        st.dataframe(daily.sort_values("date", ascending=False))
 
-    st.write("Calories over time:")
-    st.line_chart(daily.set_index("date")["calories"])
+        st.write("Calories over time:")
+        st.line_chart(daily.set_index("date")["calories"])
 
-    st.write("Protein over time:")
-    st.line_chart(daily.set_index("date")["protein"])
+        st.write("Protein over time:")
+        st.line_chart(daily.set_index("date")["protein"])
 
-    st.markdown("#### 🗑️ Delete an entry")
+        st.markdown("#### 🗑️ Delete an entry")
 
     # Show full log with a stable row_id based on the current index
     df_with_id = df.copy()
