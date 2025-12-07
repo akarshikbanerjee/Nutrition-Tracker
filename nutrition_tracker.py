@@ -293,6 +293,7 @@ if page == "Nutrition":
         st.dataframe(today_df.sort_values(["date", "meal_type"]))
 
     # ----- History / trends -----
+
 st.markdown("### 📊 History")
 
 if df.empty:
@@ -335,6 +336,7 @@ else:
                 st.experimental_rerun()
             else:
                 st.warning("That row_id no longer exists. Try refreshing the app.")
+
 
 
 # ---------- GYM NOTEBOOK PAGE ----------
