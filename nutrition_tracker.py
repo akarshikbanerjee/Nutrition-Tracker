@@ -293,21 +293,49 @@ if page == "Nutrition":
         st.dataframe(today_df.sort_values(["date", "meal_type"]))
 
     # ----- History / trends -----
+st.markdown("### 📊 History")
 
-    st.markdown("### 📊 History")
+if df.empty:
+    st.info("No data yet. Once you log a few days, your trends will appear here.")
+else:
+    # ---- Daily aggregates ----
+    daily = df.groupby("date", as_index=False)[["calories", "protein"]].sum()
+    st.write("Daily totals:")
+    st.dataframe(daily.sort_values("date", ascending=False))
 
-    if df.empty:
-        st.info("No data yet. Once you log a few days, your trends will appear here.")
-    else:
-        daily = df.groupby("date", as_index=False)[["calories", "protein"]].sum()
-        st.write("Daily totals:")
-        st.dataframe(daily.sort_values("date", ascending=False))
+    st.write("Calories over time:")
+    st.line_chart(daily.set_index("date")["calories"])
 
-        st.write("Calories over time:")
-        st.line_chart(daily.set_index("date")["calories"])
+    st.write("Protein over time:")
+    st.line_chart(daily.set_index("date")["protein"])
 
-        st.write("Protein over time:")
-        st.line_chart(daily.set_index("date")["protein"])
+    st.markdown("#### 🗑️ Delete an entry")
+
+    # Show full log with a stable row_id based on the current index
+    df_with_id = df.copy()
+    df_with_id["row_id"] = df_with_id.index
+
+    st.write("Below is your full log with an internal `row_id` you can use to delete a row:")
+    st.dataframe(
+        df_with_id[
+            ["row_id", "date", "meal_type", "food", "calories", "protein", "notes"]
+        ].sort_values("date", ascending=False)
+    )
+
+    # Let you pick a row_id to delete
+    if not df_with_id.empty:
+        row_ids = df_with_id["row_id"].tolist()
+        delete_id = st.selectbox("Select a row_id to delete", options=row_ids)
+
+        if st.button("Delete selected entry"):
+            if delete_id in df.index:
+                df = df.drop(delete_id)
+                save_data(df)
+                st.success(f"Deleted entry with row_id {delete_id}.")
+                st.experimental_rerun()
+            else:
+                st.warning("That row_id no longer exists. Try refreshing the app.")
+
 
 # ---------- GYM NOTEBOOK PAGE ----------
 
