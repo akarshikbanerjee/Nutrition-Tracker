@@ -294,11 +294,11 @@ if page == "Nutrition":
 
     # ----- History / trends -----
 
-st.markdown("### 📊 History")
+    st.markdown("### 📊 History")
 
-if df.empty:
+    if df.empty:
     st.info("No data yet. Once you log a few days, your trends will appear here.")
-else:
+    else:
     # ---- Daily aggregates ----
     daily = df.groupby("date", as_index=False)[["calories", "protein"]].sum()
     st.write("Daily totals:")
