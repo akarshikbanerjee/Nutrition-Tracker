@@ -1,12 +1,11 @@
 import os
 os.environ["TZ"] = "America/New_York"
+
 import time
 time.tzset()
 
-
 import streamlit as st
 import pandas as pd
-import os
 import json
 from datetime import date
 
@@ -173,7 +172,7 @@ save_goals(calorie_goal, protein_goal)
 st.sidebar.markdown("---")
 st.sidebar.write("Focus on **showing up daily**, not perfection.")
 
-# ---------- NUTRITION PAGE ----------
+# ================== NUTRITION PAGE ==================
 
 if page == "Nutrition":
     st.markdown("## 💪 Nutrition Check-In")
@@ -312,36 +311,34 @@ if page == "Nutrition":
 
         st.markdown("#### 🗑️ Delete an entry")
 
-    # Show full log with a stable row_id based on the current index
-    df_with_id = df.copy()
-    df_with_id["row_id"] = df_with_id.index
+        # Show full log with a stable row_id based on the current index
+        df_with_id = df.copy()
+        df_with_id["row_id"] = df_with_id.index
 
-    st.write("Below is your full log with an internal `row_id` you can use to delete a row:")
-    st.dataframe(
-        df_with_id[
-            ["row_id", "date", "meal_type", "food", "calories", "protein", "notes"]
-        ].sort_values("date", ascending=False)
-    )
+        st.write("Below is your full log with an internal `row_id` you can use to delete a row:")
+        st.dataframe(
+            df_with_id[
+                ["row_id", "date", "meal_type", "food", "calories", "protein", "notes"]
+            ].sort_values("date", ascending=False)
+        )
 
-    # Let you pick a row_id to delete
-    if not df_with_id.empty:
-        row_ids = df_with_id["row_id"].tolist()
-        delete_id = st.selectbox("Select a row_id to delete", options=row_ids)
+        # Let you pick a row_id to delete
+        if not df_with_id.empty:
+            row_ids = df_with_id["row_id"].tolist()
+            delete_id = st.selectbox("Select a row_id to delete", options=row_ids)
 
-        if st.button("Delete selected entry"):
-            if delete_id in df.index:
-                df = df.drop(delete_id)
-                save_data(df)
-                st.success(f"Deleted entry with row_id {delete_id}.")
-                st.experimental_rerun()
-            else:
-                st.warning("That row_id no longer exists. Try refreshing the app.")
+            if st.button("Delete selected entry"):
+                if delete_id in df.index:
+                    df = df.drop(delete_id)
+                    save_data(df)
+                    st.success(f"Deleted entry with row_id {delete_id}.")
+                    st.experimental_rerun()
+                else:
+                    st.warning("That row_id no longer exists. Try refreshing the app.")
 
+# ================== GYM NOTEBOOK PAGE ==================
 
-
-# ---------- GYM NOTEBOOK PAGE ----------
-
-else:
+elif page == "Gym notebook":
     st.markdown("## 🏋️‍♂️ Gym routine notebook")
     st.write("Use this as a simple place to store and update your current programs.")
 
